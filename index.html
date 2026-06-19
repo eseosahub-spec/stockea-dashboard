@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockera - Inventory & Stock Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-weight/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        dark: {
+                            bg: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- TOP NAVIGATION -->
+    <nav class="bg-dark-card border-b border-dark-border sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="bg-brand-600 text-white p-2 rounded-lg font-bold text-xl tracking-wider flex items-center justify-center shadow-lg shadow-brand-600/20">
+                <span class="material-icons pr-1">📦</span>S
+            </div>
+            <div>
+                <span class="text-lg font-bold tracking-tight text-white">Stockera</span>
+                <span class="text-xs block text-gray-400 font-medium">Est. 2021</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleSupport()" class="text-sm font-medium bg-dark-border hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2">
+                💬 <span>Support</span>
+            </button>
+            <div class="h-8 w-8 rounded-full bg-brand-600 flex items-center justify-center font-semibold text-white">
+                U
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN BODY -->
+    <div class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT & CENTER: DASHBOARD & MARKETPLACE -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- METRICS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- TOTAL BALANCE -->
+                <div class="bg-dark-card border border-dark-border p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-3 bg-brand-500/10 rounded-bl-xl text-brand-500">💰</div>
+                    <p class="text-sm text-gray-400 font-medium">Available Balance</p>
+                    <h3 id="display-balance" class="text-3xl font-bold mt-2 text-white">$14,250.00</h3>
+                    <button onclick="openWithdrawModal()" class="mt-4 w-full text-center bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold py-2 px-4 rounded-xl transition-all duration-200 shadow-md shadow-brand-600/10">
+                        Withdraw Funds
+                    </button>
+                </div>
+
+                <!-- TOTAL EARNINGS -->
+                <div class="bg-dark-card border border-dark-border p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-3 bg-blue-500/10 rounded-bl-xl text-blue-400">📈</div>
+                    <p class="text-sm text-gray-400 font-medium">Total Earnings</p>
+                    <h3 id="display-earnings" class="text-3xl font-bold mt-2 text-white">$4,892.50</h3>
+                    <span class="text-xs text-brand-500 font-medium inline-block mt-5">↑ 12.4% this month</span>
+                </div>
+
+                <!-- ACTIVE GOODS IN STOCKS -->
+                <div class="bg-dark-card border border-dark-border p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-3 bg-purple-500/10 rounded-bl-xl text-purple-400">📦</div>
+                    <p class="text-sm text-gray-400 font-medium">Active Goods Inventory</p>
+                    <h3 class="text-3xl font-bold mt-2 text-white">9 Lots</h3>
+                    <span class="text-xs text-gray-400 inline-block mt-5">Across 3 categories</span>
+                </div>
+            </div>
+
+            <!-- LIVE GOODS MARKETPLACE -->
+            <div>
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span>🛒</span> High-Yield Active Goods Available
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Item 1 -->
+                    <div class="bg-dark-card border border-dark-border p-5 rounded-2xl flex flex-col justify-between hover:border-gray-700 transition">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-1 rounded-full font-medium">Electronics</span>
+                                <span class="text-brand-500 text-sm font-semibold">+18.5% Est. ROI</span>
+                            </div>
+                            <h4 class="text-base font-semibold text-white">Premium Lithium Battery Batches</h4>
+                            <p class="text-xs text-gray-400 mt-1">Sourced from prime global suppliers, pending wholesale distribution.</p>
+                        </div>
+                        <div class="mt-5 pt-4 border-t border-dark-border flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 block">Price per Share</span>
+                                <span class="text-sm font-bold text-white">$250.00</span>
+                            </div>
+                            <button onclick="investItem('Lithium Battery Batches', 250)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-medium py-2 px-4 rounded-xl transition">
+                                Buy Stock Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="bg-dark-card border border-dark-border p-5 rounded-2xl flex flex-col justify-between hover:border-gray-700 transition">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2.5 py-1 rounded-full font-medium">Commodities</span>
+                                <span class="text-brand-500 text-sm font-semibold">+14.2% Est. ROI</span>
+                            </div>
+                            <h4 class="text-base font-semibold text-white">Grade-A Arabica Coffee Consignment</h4>
+                            <p class="text-xs text-gray-400 mt-1">High-demand bulk physical agricultural goods locked in freight hubs.</p>
+                        </div>
+                        <div class="mt-5 pt-4 border-t border-dark-border flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 block">Price per Share</span>
+                                <span class="text-sm font-bold text-white">$120.00</span>
+                            </div>
+                            <button onclick="investItem('Arabica Coffee Consignment', 120)" class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-medium py-2 px-4 rounded-xl transition">
+                                Buy Stock Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR: RECENT ACTIVITY & LOGS -->
+        <div class="space-y-6">
+            <div class="bg-dark-card border border-dark-border rounded-2xl p-6 h-full flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <span>📝</span> Ledger Activity Log
+                    </h3>
+                    <div id="ledger-list" class="space-y-4 max-h-[380px] overflow-y-auto pr-2">
+                        <!-- Seed logs -->
+                        <div class="text-xs border-l-2 border-brand-500 pl-3 py-1">
+                            <span class="text-gray-400 block">Today, 11:20 AM</span>
+                            <span class="text-white font-medium">Dividends Received: </span>
+                            <span class="text-brand-500">+$45.00</span> from Consumer Tech Lot
+                        </div>
+                        <div class="text-xs border-l-2 border-gray-600 pl-3 py-1">
+                            <span class="text-gray-400 block">Yesterday, 04:15 PM</span>
+                            <span class="text-white font-medium">System Settlement: </span> Finished batch release verification.
+                        </div>
+                        <div class="text-xs border-l-2 border-brand-500 pl-3 py-1">
+                            <span class="text-gray-400 block">June 16, 2026</span>
+                            <span class="text-white font-medium">Dividends Received: </span>
+                            <span class="text-brand-500">+$120.00</span> from Solar Logistics batch
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-dark-border bg-gray-900/50 p-3 rounded-xl text-xs text-gray-400">
+                    🔒 Secure Escrow Environment monitored by Stockera Node Systems since establishment in <strong>2021</strong>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WITHDRAWAL MODAL -->
+    <div id="withdraw-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-dark-card border border-dark-border w-full max-w-md rounded-2xl p-6 relative">
+            <button onclick="closeWithdrawModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">✕</button>
+            <h3 class="text-xl font-bold text-white mb-2">Withdraw Earnings</h3>
+            <p class="text-xs text-gray-400 mb-4">Transfer your settled profit ledger directly into external routing pipelines.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 font-medium mb-1">Select Gateway</label>
+                    <select id="withdraw-gateway" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <option value="bank">Commercial Bank Transfer</option>
+                        <option value="crypto">Cryptocurrency Network Wallet (USDT / BTC)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 font-medium mb-1">Destination Address / Routing Details</label>
+                    <input type="text" id="withdraw-destination" placeholder="Enter bank account or wallet address" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 font-medium mb-1">Amount ($)</label>
+                    <input type="number" id="withdraw-amount" placeholder="0.00" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <button onclick="executeWithdrawal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl transition text-sm shadow-md">
+                    Confirm & Dispatch Assets
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMER SUPPORT CHAT DRAWER -->
+    <div id="support-drawer" class="fixed right-0 bottom-0 top-0 w-full max-w-sm bg-dark-card border-l border-dark-border z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+        <!-- Header -->
+        <div class="p-4 border-b border-dark-border flex items-center justify-between bg-dark-bg">
+            <div class="flex items-center space-x-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></div>
+                <div>
+                    <h4 class="text-sm font-bold text-white">Stockera Support Terminal</h4>
+                    <p class="text-[10px] text-gray-400">Serving Investors Globally Since 2021</p>
+                </div>
+            </div>
+            <button onclick="toggleSupport()" class="text-gray-400 hover:text-white">✕</button>
+        </div>
+
+        <!-- Chat messages view -->
+        <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+            <div class="bg-gray-800 p-3 rounded-r-xl rounded-bl-xl text-gray-200 max-w-[85%]">
+                Hello! Welcome to Stockera Help Terminal. Our team has been processing secure retail inventory distributions since 2021. How can we optimize your asset positions today?
+            </div>
+        </div>
+
+        <!-- Inputs -->
+        <div class="p-3 border-t border-dark-border bg-dark-bg flex items-center gap-2">
+            <input type="text" id="chat-input" placeholder="Type support transmission query..." class="flex-1 bg-dark-card border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" onkeypress="if(event.key === 'Enter') sendSupportMessage()">
+            <button onclick="sendSupportMessage()" class="bg-brand-600 hover:bg-brand-700 p-2 rounded-xl text-white text-xs font-semibold px-3 transition">
+                Send
+            </button>
+        </div>
+    </div>
+
+    <!-- ENGINE LOGIC SCRIPT -->
+    <script>
+        let state = {
+            balance: 14250.00,
+            earnings: 4892.50
+        };
+
+        function updateUI() {
+            document.getElementById('display-balance').innerText = `$${state.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('display-earnings').innerText = `$${state.earnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function openWithdrawModal() {
+            document.getElementById('withdraw-modal').style.display = 'flex';
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById('withdraw-modal').style.display = 'none';
+        }
+
+        function toggleSupport() {
+            const drawer = document.getElementById('support-drawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function pushLedger(title, value, type='neutral') {
+            const list = document.getElementById('ledger-list');
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            let colorClass = 'border-gray-600';
+            let textVal = value;
+            if(type === 'plus') { colorClass = 'border-brand-500'; textVal = `<span class="text-brand-500">${value}</span>`; }
+            if(type === 'minus') { colorClass = 'border-red-500'; textVal = `<span class="text-red-400">${value}</span>`; }
+
+            const log = document.createElement('div');
+            log.className = `text-xs border-l-2 ${colorClass} pl-3 py-1 transition-all opacity-0 transform translate-y-2`;
+            log.innerHTML = `
+                <span class="text-gray-400 block">Today, ${timestamp}</span>
+                <span class="text-white font-medium">${title}: </span> ${textVal}
+            `;
+            list.insertBefore(log, list.firstChild);
+            
+            setTimeout(() => {
+                log.classList.remove('opacity-0', 'translate-y-2');
+            }, 50);
+        }
+
+        function executeWithdrawal() {
+            const amtInput = document.getElementById('withdraw-amount');
+            const destInput = document.getElementById('withdraw-destination');
+            const gateway = document.getElementById('withdraw-gateway').value;
+            const amount = parseFloat(amtInput.value);
+
+            if(!amount || amount <= 0) {
+                alert("Please declare a valid operational asset amount.");
+                return;
+            }
+            if(!destInput.value.trim()) {
+                alert("Destination target terminal details cannot be blank.");
+                return;
+            }
+            if(amount > state.balance) {
+                alert("Insufficient fluid balance in vault reserves.");
+                return;
+            }
+
+            state.balance -= amount;
+            updateUI();
+            closeWithdrawModal();
+            pushLedger(`Withdrawal Transferred via ${gateway.toUpperCase()}`, `-$${amount.toFixed(2)}`, 'minus');
+            
+            amtInput.value = '';
+            destInput.value = '';
+        }
+
+        function investItem(itemName, pricing) {
+            if(state.balance < pricing) {
+                alert("Insufficient liquidation balance available to buy shares in this specific lot.");
+                return;
+            }
+            state.balance -= pricing;
+            state.earnings += (pricing * 0.05); // immediate yield showcase element
+            updateUI();
+            pushLedger(`Purchased Lot Stock [${itemName}]`, `-$${pricing.toFixed(2)}`, 'neutral');
+            pushLedger(`Projected Yield Accrued`, `+$${(pricing * 0.05).toFixed(2)}`, 'plus');
+        }
+
+        function sendSupportMessage() {
+            const input = document.getElementById('chat-input');
+            const chatBox = document.getElementById('chat-box');
+            if(!input.value.trim()) return;
+
+            // User Chat node
+            const userMsg = document.createElement('div');
+            userMsg.className = "bg-brand-600 text-white p-3 rounded-l-xl rounded-br-xl text-gray-200 max-w-[85%] ml-auto text-right";
+            userMsg.innerText = input.value;
+            chatBox.appendChild(userMsg);
+
+            const holdText = input.value;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Simulated Agent Response Matrix
+            setTimeout(() => {
+                const automatedResponses = [
+                    "Transmission acknowledged. A specialized desk operator from our 2021 founding desk is analyzing your request details.",
+                    "Your ledger allocation metrics look secure. We are checking liquidity bridges to fulfill this seamlessly.",
+                    "Operational guidelines verified. Stockera protocols ensure that physical distribution networks settle your batch balance shortly."
+                ];
+                const randResp = automatedResponses[Math.floor(Math.random() * automatedResponses.length)];
+                
+                const supportMsg = document.createElement('div');
+       
